@@ -1,0 +1,4 @@
+###
+GET http://localhost:9000/api/auth/existingUser?email=usuario@example.com HTTP/1.1
+
+###
