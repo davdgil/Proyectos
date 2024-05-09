@@ -13,6 +13,7 @@ export default function WebPage() {
   const [existPage, setExistPage] = useState(false);
   const [commerceId, setCommerceId] = useState(null);
   const [commerce, setCommerce] = useState([]);
+  const [id, setId] = useState([]);
 
   useEffect(() => {
     const fetchCommerceData = async () => {
@@ -62,6 +63,7 @@ export default function WebPage() {
         const token = localStorage.getItem('token');
         const decodedToken = jwtDecode(token);
         const userID = decodedToken._id
+  
         console.log('id:',userID)
         
         const response = await fetch(`http://localhost:9000/api/webPage/getWebPage/${userID}`, {
@@ -79,7 +81,7 @@ export default function WebPage() {
 
         if (data.page) {
           setExistPage(true);
-          setPage(data);
+          setPage(data.page);
         } else {
           setExistPage(false);
           setPage([]);
@@ -102,13 +104,15 @@ export default function WebPage() {
   };
 
   const handleSave = async (data) => {
-    setEditing(false); // Oculta el editor después de guardar
+    console.log('dataaaaaaaaaaaaaaaaaaaaaaaaaaaaa',data)
+    setEditing(false); 
     setExistPage(true);
 
     try {
-      const response = await fetch("/api/webPage", {
+      const response = await fetch("http://localhost:9000/api/webPage/upload-images", {
         method: "POST",
         headers: {
+          "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
@@ -132,29 +136,30 @@ export default function WebPage() {
 
   const handleDeleteClick = async () => {
     try {
-      const response = await fetch("/api/webPage", {
+      console.log(id)
+      const token = localStorage.getItem('token'); // Asumiendo que el token se guarda en localStorage
+      const decodedToken = jwtDecode(token);
+        const userID = decodedToken._id
+      const response = await fetch(`http://localhost:9000/api/webPage/delete/${userID}`, {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: webPage.id }),
+          'Authorization': `Bearer ${token}`  // Incluye el token en el header Authorization
+        }
       });
 
       if (response.ok) {
         console.log("Página web eliminada con éxito");
         setExistPage(false);
+        // Opcionalmente puedes redirigir al usuario o recargar componentes/data aquí
       } else {
         console.error("Error al eliminar la página web:", response.statusText);
+        alert("No se pudo eliminar la página web."); // Informar al usuario si hay un error
       }
     } catch (error) {
       console.error("Error al enviar la solicitud al servidor:", error);
+      alert("Error al conectar con el servidor."); // Informar al usuario de problemas de conexión
     }
-  };
-
-  const logPageData = () => {
-    console.log("Página web Cookies: ", webPage);
-    console.log("Página del txt: ", page);
-  };
+};
 
   return (
     <div>

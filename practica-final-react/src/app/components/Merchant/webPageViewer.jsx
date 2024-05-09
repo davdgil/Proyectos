@@ -1,13 +1,14 @@
 // WebPageViewer.jsx
 import React, { useState } from "react";
 import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 
 const WebPageViewer = ({ webPageData }) => {
-  const { commerceName, title, description, city, photos, address, likes, dislikes, reviews } = webPageData.page;
+  const { commerceName, title, description, city, photos, address, likes, dislikes, reviews } = webPageData;
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
 
-  console.log('datos pagina web',webPageData)
+  console.log('datos pagina web', webPageData)
 
   const handleLike = async () => {
     if (!liked && parsedUserData.userType === 'user') {

@@ -3,11 +3,10 @@ const router = express.Router();
 const { checkRole } = require('../middleware/role');
 const { authMiddleware } = require('../middleware/session');
 const { existingWebPage } = require('../middleware/webPage')
-const { existingCommerceWebPage, createOrUpdateWebPage } = require('../controllers/webPage');
+const { existingCommerceWebPage, createWebPage,deleteWebPage } = require('../controllers/webPage');
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 const { uploadImages } = require('../utils/storage');
-const { webPageModel } = require('../models'); 
 
 /**
  * @swagger
@@ -90,7 +89,34 @@ router.get('/getWebPage/:merchantId', authMiddleware, checkRole(['merchant']), e
  *         description: Error interno del servidor.
  */
 
-router.post('/upload-images',authMiddleware, checkRole(['merchant']), existingWebPage, upload.array('images'), createOrUpdateWebPage);
+router.post('/upload-images',authMiddleware, checkRole(['merchant']), existingWebPage, upload.array('images'), createWebPage);
     
+
+
+/**
+ * @swagger
+ * /webPage/delete/{id}:
+ *   delete:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Elimina una página web específica
+ *     tags: [WebPage]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: El ID de la página web a eliminar
+ *     responses:
+ *       200:
+ *         description: Página web eliminada correctamente
+ *       404:
+ *         description: Página web no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.delete('/delete/:id', authMiddleware, checkRole(['merchant']), deleteWebPage);
+
 
 module.exports = router;

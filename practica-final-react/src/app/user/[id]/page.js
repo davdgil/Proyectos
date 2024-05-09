@@ -4,6 +4,7 @@ import WebPageViewer from "@/app/components/Merchant/webPageViewer";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 
 export default function Page() {
@@ -25,7 +26,6 @@ export default function Page() {
                 }else{
                     
                     toast.error("No hay pagina web asociada al comercio")
-
                     router.push('/user')
                 }
 

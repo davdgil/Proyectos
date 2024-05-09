@@ -1,17 +1,21 @@
 const { usersModel } = require('../models');
+const { matchedData } = require("express-validator")
 
 const userVerification = async (req, res, next) => {
     try {
-        const { email } = req.body;
-        const user = await usersModel.findOne({ email });
-
+        const { email } = matchedData(req);
+        console.log(email)
+        const user = await usersModel.findOne({ email: email });
+       
         if (!user) {
             console.log("crear un nuevo usuario")
             next();
         } else {
+            console.log("activar usuario")
             if (!user.isActive && user.role === "merchant") {
                 console.log("crear un nuevo comerciante")
                 user.isActive = true;
+                user.role = 'merchant'
                 await user.save();
                 req.user = user;
                 next();
@@ -20,7 +24,7 @@ const userVerification = async (req, res, next) => {
                     message: 'Usuario ya existente y activo',
                     user: {
                         email: user.email,
-                        role: user.role,
+                        role: 'usuario',
                         isActive: user.isActive
                     }
                 });

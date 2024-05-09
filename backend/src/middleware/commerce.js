@@ -4,7 +4,7 @@ const existingCommerce = async (req, res, next) => {
     try {
         console.log("Verificando comercio existente...")
         const { email } = req.body;
-        const commerce = await commercesModel.findOne({ email });
+        const commerce = await commercesModel.findOne({ email: email });
         if (commerce) {
             console.log("Comercio ya existente");
             return res.status(409).json({ message: 'Comercio ya creado' }); // Retorna y detiene el middleware

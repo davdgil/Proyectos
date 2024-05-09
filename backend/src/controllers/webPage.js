@@ -24,44 +24,46 @@ const existingCommerceWebPage = async (req, res) =>{
   }
 }
 
-const createOrUpdateWebPage = async (req, res) => {
+const createWebPage = async (req, res) => {
   try {
-    let webpage;
-    if (req.body.webpageId) {
-        // Si se proporciona un webpageId, encuentra la página web existente
-        webpage = await WebPage.findById(req.body.webpageId);
-        if (!webpage) {
-            return res.status(404).send('WebPage not found');
-        }
-    } else {
-        // Si no se proporciona un webpageId, crea una nueva WebPage
-        webpage = new webPageModel({
-            merchantId: req.body.merchantId,
-            commerceName: req.body.commerceName,
-            title: req.body.title,
-            description: req.body.description,
-            city: req.body.city,
-            address: req.body.address,
-            likes: 0,  // Inicia con valores predeterminados
-            dislikes: 0,
-            reviews: [],  // Sin revisiones inicialmente
-            photos: []  // Sin fotos inicialmente
-        });
-        await webpage.save();
-    }
-
-    // Sube las imágenes y actualiza el documento WebPage
+    const webpage = new webPageModel({
+      merchantId: req.body.merchantId,
+      commerceName: req.body.commerceName,
+      title: req.body.title,
+      description: req.body.description,
+      city: req.body.city,
+      address: req.body.address,
+      likes: 0,
+      dislikes: 0,
+      reviews: [],
+      photos: []
+    });
+    console.log(webpage)
     const imageUrls = await uploadImages(req.files);
-    webpage.photos.push(...imageUrls.map(url => ({ url })));
+    webpage.photos = imageUrls.map(url => ({ url }));
     await webpage.save();
-
-    res.status(200).json({ message: 'Images uploaded and saved successfully', webpage });
-} catch (error) {
-    console.error('Error handling image upload:', error);
+    res.status(201).json({ message: 'Web page created successfully', webpage });
+  } catch (error) {
+    console.error('Error creating web page:', error);
     res.status(500).send(error.message);
-}
-
+  }
 };
 
-module.exports = { existingCommerceWebPage, createOrUpdateWebPage }
+
+const deleteWebPage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedPage = await webPageModel.findOneAndDelete({ merchantId: id });
+    if (!deletedPage) {
+      return res.status(404).json({ message: "Web page not found" });
+    }
+    console.log("pagine web eliminada")
+    res.status(200).json({ message: 'Web page deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting web page:', error);
+    res.status(500).send(error.message);
+  }
+};
+
+module.exports = { existingCommerceWebPage, createWebPage, deleteWebPage };
 
