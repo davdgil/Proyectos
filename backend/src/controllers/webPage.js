@@ -112,6 +112,27 @@ const deleteWebPage = async (req, res) => {
   }
 };
 
+const deleteWebPageByCommerceName = async (req, res) => {
+  try {
+
+      const { commerceName } = req.params; 
+      const deletedPage = await webPageModel.findOneAndDelete({ commerceName });
+
+      if (!deletedPage) {
+        
+          return handleError(res, "Web page not found for the given commerce name.", 404);
+      }
+
+     
+      res.status(200).json({ message: 'Web page eliminada' });
+  } catch (error) {
+      
+      console.error('Error al borrar la pagina web por su commerceName:', error);
+     
+      handleError(res, 'Internal server error while deleting the web page.', 500);
+  }
+};
+
 const updateReview = async (req, res) => {
   const { id } = req.params;
   const { userId, comment } = req.body;
@@ -136,5 +157,5 @@ const updateReview = async (req, res) => {
 };
 
 
-module.exports = { existingCommerceWebPage, createWebPage, deleteWebPage, updateReview, updateLikesDislikes };
+module.exports = { existingCommerceWebPage, createWebPage, deleteWebPage, updateReview, updateLikesDislikes, deleteWebPageByCommerceName };
 

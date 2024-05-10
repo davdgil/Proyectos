@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --forceExit",
-    "start": "nodemon app.js"
-  },
+    "test": "jest",  
+    "test:app": "jest test/app.test.js",  
+    "test:delete": "jest test/delete.test.js" 
+  }
+  ,
   "keywords": [],
   "author": "",
   "license": "ISC",

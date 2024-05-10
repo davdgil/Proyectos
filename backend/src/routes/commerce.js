@@ -4,7 +4,7 @@ const { commerceValidation } = require('../validators/commerce')
 const { existingUser} = require('../middleware/user');
 const { checkRole } = require('../middleware/role')
 const { authMiddleware } = require('../middleware/session')
-const { createCommerce, getAllCommerces, getCommerceByID, deleteAllCommerces, deleteCommerceByID, getCommerceByEmailUser, getMerchantWithCommerceById } = require("../controllers/commerce");
+const { createCommerce, getAllCommerces, getCommerceByID, deleteAllCommerces, deleteCommerceByID, getCommerceByEmailUser, getMerchantWithCommerceById, deleteCommerceByEmail } = require("../controllers/commerce");
 
 
 /**
@@ -198,6 +198,32 @@ router.get('/getCommerceByEmail/:email', authMiddleware, checkRole(['admin', 'me
  *         description: Error interno del servidor
  */
 router.get('/getMerchant/:id', authMiddleware, checkRole(['admin', 'merchant', 'usuario', 'anonimo']), getMerchantWithCommerceById);
+
+/**
+ * @swagger
+ * /commerce/deleteCommerceByEmail/{email}:
+ *   delete:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Deletes a specific commerce and its associated merchant by email
+ *     tags: [Commerce]
+ *     parameters:
+ *       - in: path
+ *         name: email
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The email of the commerce to delete
+ *     responses:
+ *       200:
+ *         description: Commerce and associated merchant successfully deleted.
+ *       404:
+ *         description: Commerce not found.
+ *       500:
+ *         description: Internal server error occurred during the operation.
+ */
+
+router.delete('/deleteCommerceByEmail/:email', authMiddleware, checkRole(['admin', 'merchant']), deleteCommerceByEmail);
 
 
 module.exports = router;

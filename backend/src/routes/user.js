@@ -10,6 +10,7 @@ const {
     getUserById,
     deleteAllUsers,
     deleteUserById,
+    deleteUserByEmail,
     updateUser,
   } = require('../controllers/user');
 
@@ -109,6 +110,33 @@ const {
 
   router.delete('/deleteUserById/:id',authMiddleware,checkRole(['admin']), deleteUserById);
   
+
+  /**
+ * @swagger
+ * /user/deleteByEmail/{email}:
+ *   delete:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Deletes a user by their email address
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: email
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The email of the user to delete
+ *     responses:
+ *       200:
+ *         description: User and any associated commerce successfully deleted.
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal server error.
+ */
+
+  router.delete('/deleteByEmail/:email', authMiddleware, checkRole(['admin']), deleteUserByEmail);
+
 /**
  * @swagger
  * /user/updateUserById/{id}:

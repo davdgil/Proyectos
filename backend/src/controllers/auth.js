@@ -18,7 +18,7 @@ const createNewUser = async (req, res) => {
                 data,
                 { new: true, runValidators: true }
             );
-            handleSuccess(res, "Usuario comerciante actualizado con éxito", updatedUser);
+            handleSuccess(res, "Usuario comerciante actualizado con éxito", updatedUser, 201);
         } catch (error) {
             handleError(res, "Error al actualizar usuario comerciante", 400);
         }

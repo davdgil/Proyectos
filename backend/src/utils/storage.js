@@ -6,6 +6,10 @@ const storage = new Storage({
 const bucket = storage.bucket(process.env.GCS_BUCKET_NAME);
 
 exports.uploadImages = async (files) => {
+
+  if (!files || files.length === 0) {
+    return []; // Return an empty array if no files were uploaded
+  }
   const promises = files.map(file => {
     const blob = bucket.file(file.originalname.replace(/ /g, "_"));
     const blobStream = blob.createWriteStream({

@@ -3,7 +3,7 @@ const router = express.Router();
 const { checkRole } = require('../middleware/role');
 const { authMiddleware } = require('../middleware/session');
 const { existingWebPage } = require('../middleware/webPage')
-const { existingCommerceWebPage, createWebPage,deleteWebPage, updateReview,updateLikesDislikes } = require('../controllers/webPage');
+const { existingCommerceWebPage, createWebPage,deleteWebPage, updateReview,updateLikesDislikes, deleteWebPageByCommerceName } = require('../controllers/webPage');
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 const { uploadImages } = require('../utils/storage');
@@ -154,6 +154,31 @@ router.post('/upload-images',authMiddleware, checkRole(['merchant']), existingWe
  *         description: Error interno del servidor
  */
 router.delete('/delete/:id', authMiddleware, checkRole(['merchant']), deleteWebPage);
+
+/**
+ * @swagger
+ * /webPage/deleteByCommerceName/{commerceName}:
+ *   delete:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Deletes a web page based on the commerce name
+ *     tags: [WebPage]
+ *     parameters:
+ *       - in: path
+ *         name: commerceName
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The commerce name of the web page to delete
+ *     responses:
+ *       200:
+ *         description: Web page deleted successfully
+ *       404:
+ *         description: Web page not found for the given commerce name
+ *       500:
+ *         description: Internal server error
+ */
+router.delete('/deleteByCommerceName/:commerceName', authMiddleware, checkRole(['admin']), deleteWebPageByCommerceName)
 
 router.put('/:id/likes',authMiddleware, checkRole(['usuario']), updateLikesDislikes);
 

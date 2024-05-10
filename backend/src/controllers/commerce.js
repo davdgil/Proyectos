@@ -22,6 +22,33 @@ const getMerchantWithCommerceById = async (req, res) => {
     }
 };
 
+const deleteCommerceByEmail = async (req, res) => {
+    try {
+        const { email } = req.params;
+        console.log(email);
+
+        const commerce = await commercesModel.findOne({ email: email });
+        console.log(commerce);
+
+        if (!commerce) {
+            handleError(res, 'Commerce not found', 404);
+            return;
+        }
+
+        if (commerce.merchant) {
+            await usersModel.findByIdAndDelete(commerce.merchant);
+        }
+
+        await commercesModel.findOneAndDelete({ email: email });
+
+        res.status(200).json({ message: `Comercio y comerciante con email ${email} han sido borrados.` });
+    } catch (error) {
+        console.error('Error deleting commerce by email:', error);
+        handleError(res, 'Error al eliminar comercio por email', 500);
+    }
+};
+
+
 
 const createCommerce = async (req, res) => {
     const data = matchedData(req);
@@ -146,4 +173,4 @@ const deleteCommerceByID = async (req, res) => {
 
 
 
-module.exports = { createCommerce, getAllCommerces, getCommerceByID, deleteAllCommerces, deleteCommerceByID, getCommerceByEmailUser, getMerchantWithCommerceById };
+module.exports = { createCommerce, getAllCommerces, getCommerceByID, deleteAllCommerces, deleteCommerceByID, getCommerceByEmailUser, getMerchantWithCommerceById, deleteCommerceByEmail };

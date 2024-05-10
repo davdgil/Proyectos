@@ -108,6 +108,7 @@ const WebPageEditor = ({ onSave, onCancel, initialData }) => {
             multiple
             className="w-full border rounded p-2 mt-1"
           />
+          {errors.photos && <span className="text-red-500">{errors.photos.message}</span>} 
         </label>
         <label className="block mb-2">
           Dirección:

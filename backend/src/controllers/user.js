@@ -39,6 +39,29 @@ const deleteAllUsers = async (req, res) => {
     }
 };
 
+const deleteUserByEmail = async (req, res) => {
+    try {
+        const { email } = req.params;  // Extract email from request parameters
+        const user = await usersModel.findOne({ email: email });
+
+        if (!user) {
+            return handleError(res, 'Usuario no encontrado', 404);
+        }
+
+        // Check if the user is a merchant and delete associated commerces if necessary
+        if (user.role === 'merchant') {
+            await commercesModel.deleteMany({ merchant: user._id });
+        }
+
+        // Delete the user
+        await usersModel.findOneAndDelete({ email: email });
+        res.status(200).json({ message: 'Usuario y cualquier comercio asociado eliminados con éxito.' });
+    } catch (error) {
+        handleError(res, 'Error interno del servidor', 500);
+    }
+};
+
+
 const deleteUserById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -72,4 +95,4 @@ const updateUser = async (req, res) => {
     }
 };
 
-module.exports = { getAllUsers, getUserById, deleteAllUsers, deleteUserById, updateUser };
+module.exports = { getAllUsers, getUserById, deleteAllUsers, deleteUserById, updateUser, deleteUserByEmail };

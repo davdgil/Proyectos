@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const WebPageSchema = new mongoose.Schema({
   merchantId: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
     ref: 'User'
   },
   commerceName: {
