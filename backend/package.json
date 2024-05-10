@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",  
+    "start": "nodemon app.js",
     "test:app": "jest test/app.test.js",  
     "test:delete": "jest test/delete.test.js" 
   }
