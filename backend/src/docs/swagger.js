@@ -76,7 +76,7 @@ const options = {
             example: {
               email: "usuario@example.com",
               password: "password123",
-              role: "usuario",
+              role: "admin",
               city: "Ciudad Metrópolis",
               interests: "hamburguesas",
               isActive: true

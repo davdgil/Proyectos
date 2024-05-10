@@ -37,6 +37,7 @@ const WebPageViewer = ({ webPageData }) => {
         setLiked(true);
         setDisliked(false);
         toast.success('Like exitoso');
+        window.location.reload();
       } else {
         const errorData = await response.json();
         toast.error(errorData.message);
@@ -67,6 +68,7 @@ const WebPageViewer = ({ webPageData }) => {
         setDisliked(true);
         setLiked(false);
         toast.success('Dislike exitoso');
+        window.location.reload();
       } else {
         const errorData = await response.json();
         toast.error(errorData.message);
