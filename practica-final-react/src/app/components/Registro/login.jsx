@@ -24,7 +24,7 @@ const login = async (userEmail, userPass, router) => {
       toast.error(data.message || "Error al iniciar sesión");
       return;
     }
-      console.log(data)
+    console.log(data)
     // Guardar el token
     const { token } = data;
     localStorage.setItem('token', token);
@@ -67,14 +67,28 @@ function Login() {
     login(data.email, data.password, router)
   }
 
-  const privateMode = () => {
-    const userTemp ={
-      userType: 'incognito'
-    }
-    console.error("Error al obtener usuarios:");
-    router.push("/user")
-  }
+  const privateMode =async () => {
+    try {
+      // Realizar una solicitud al servidor para obtener un token temporal
+      const response = await fetch('http://localhost:9000/api/auth/', {
+        method: 'POST',
+      });
 
+      if (!response.ok) {
+        toast.error("Error al iniciar sesión en modo incógnito");
+        return;
+      }
+
+      const data = await response.json();
+      console.log(data.token);
+
+      localStorage.setItem('token', data.token);
+
+      router.push("/user")
+    } catch (err) {
+
+    }
+  }
   return (
 
     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -148,11 +162,11 @@ function Login() {
             </p>
           </form>
           <button
-              onClick={privateMode}
-              className="w-full text-yellow-50 bg-violet-400 hover:bg-blue-950 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-            >
-              Modo Incógnito
-            </button>
+            onClick={privateMode}
+            className="w-full text-yellow-50 bg-violet-400 hover:bg-blue-950 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+          >
+            Modo Incógnito
+          </button>
         </div>
       </div>
     </div>

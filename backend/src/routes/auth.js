@@ -4,7 +4,7 @@ const { createNewUser, existingUserGET} = require('../controllers/auth');
 const { userVerification,} = require('../middleware/userVerification')
 const { existingUserPOST, verifyPassword, generateToken } = require('../middleware/login')
 const { validatorRegister } = require('../validators/auth')
-
+const {anonymousLoginMiddleware } = require('../middleware/incognito')
 /**
  * @swagger
  * /auth/register:
@@ -90,6 +90,8 @@ router.get("/existingUser", existingUserGET);
  */
 
 router.post('/login', existingUserPOST, verifyPassword, generateToken )
+
+router.post('/', anonymousLoginMiddleware ,generateToken)
 
 
 module.exports = router;
