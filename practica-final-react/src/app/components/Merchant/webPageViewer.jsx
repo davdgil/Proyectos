@@ -18,6 +18,10 @@ const WebPageViewer = ({ webPageData }) => {
     return decodedToken;
   }
   const handleLike = async () => {
+    if (obtainDataUser().role !== 'usuario') {
+      toast.error("Solo usuarios pueden reaccionar");
+      return;
+    }
     const userId = obtainDataUser()._id;
     try {
       const response = await fetch(`http://localhost:9000/api/webPage/${webPageData._id}/likes`, {
@@ -44,6 +48,10 @@ const WebPageViewer = ({ webPageData }) => {
   };
 
   const handleDislike = async () => {
+    if (obtainDataUser().role !== 'usuario') {
+      toast.error("Solo usuarios pueden reaccionar");
+      return;
+    }
     const userId = obtainDataUser()._id;
     try {
       const response = await fetch(`http://localhost:9000/api/webPage/${webPageData._id}/likes`, {
