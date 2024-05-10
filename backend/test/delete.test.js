@@ -1,7 +1,7 @@
 const request = require('supertest');
 const app = require('../app');
 
-describe('Creacion de admin, login, creacion de comercio, registro de comercio, incio de sesion de comerciante, creacion de pagina web', () => {
+describe('Incia sesion como admin, borra comercios, comerciante y paginaWeb creados en el otro test', () => {
 
     let userToken = '';
 
@@ -41,11 +41,11 @@ describe('Creacion de admin, login, creacion de comercio, registro de comercio, 
       });
 
       it('should delete a user by email', async () => {
-        const emailToDelete = 'JestTest@example.com';  // The email of the user to delete
+        const emailToDelete = 'JestTest@example.com';  
         const res = await request(app)
           .delete(`/api/user/deleteByEmail/${emailToDelete}`)
-          .set('Authorization', `Bearer ${userToken}`)  // Use the token for authentication
-          .expect(200);  // Expecting HTTP 200 OK if the deletion is successful
+          .set('Authorization', `Bearer ${userToken}`)  
+          .expect(200); 
   
         expect(res.body).toHaveProperty('message');
         expect(res.body.message).toEqual('Usuario y cualquier comercio asociado eliminados con éxito.');  // Adjust the expected message as per your API response
