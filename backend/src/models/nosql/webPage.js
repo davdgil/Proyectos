@@ -34,6 +34,14 @@ const WebPageSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  likesBy: [{  
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  dislikesBy: [{ 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
   reviews: [{
     userId: {
       type: mongoose.Schema.Types.ObjectId,

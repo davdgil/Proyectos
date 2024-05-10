@@ -24,6 +24,53 @@ const existingCommerceWebPage = async (req, res) =>{
   }
 }
 
+const updateLikesDislikes = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { action } = req.body;
+    const { userId } = req.body;
+    console.log(id, action, userId)
+    let updateField;
+    let oppositeField;
+
+    if (action === 'like') {
+      updateField = 'likes';
+      oppositeField = 'dislikes';
+    } else if (action === 'dislike') {
+      updateField = 'dislikes';
+      oppositeField = 'likes';
+    } else {
+      return res.status(400).json({ message: 'Invalid action' });
+    }
+
+    const page = await webPageModel.findById(id);
+
+    if (!page) {
+      return res.status(404).json({ message: 'Page not found' });
+    }
+
+    // Check if the user has already performed the opposite action
+    if (page[oppositeField + 'By'].includes(userId)) {
+      return res.status(400).json({ message: 'Ya has realizado la acción opuesta' });
+    }
+
+    // Check if the user has already performed the same action
+    if (page[updateField + 'By'].includes(userId)) {
+      return res.status(400).json({ message: 'Ya has realizado esta accion' });
+    }
+
+    page[updateField]++;
+    page[updateField + 'By'].push(userId);
+
+    await page.save();
+
+    res.status(200).json({ message: `${action.charAt(0).toUpperCase() + action.slice(1)} successful` });
+  } catch (error) {
+    console.error('Error updating likes/dislikes:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 const createWebPage = async (req, res) => {
   try {
     const webpage = new webPageModel({
@@ -89,5 +136,5 @@ const updateReview = async (req, res) => {
 };
 
 
-module.exports = { existingCommerceWebPage, createWebPage, deleteWebPage, updateReview };
+module.exports = { existingCommerceWebPage, createWebPage, deleteWebPage, updateReview, updateLikesDislikes };
 

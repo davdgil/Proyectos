@@ -18,80 +18,55 @@ const WebPageViewer = ({ webPageData }) => {
     return decodedToken;
   }
   const handleLike = async () => {
-
+    const userId = obtainDataUser()._id;
     try {
-      const requestBody = { likes: +1 };
-      //const requestID = webPageData.id
-      console.log('Request Body:', requestBody);
-
-      const response = await fetch(`http://localhost:3000/api/webPage/${webPageData.id}`, {
+      const response = await fetch(`http://localhost:9000/api/webPage/${webPageData._id}/likes`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify(requestBody),
+        body: JSON.stringify({ userId, action: 'like' }),
       });
 
       if (response.ok) {
-        // Verificar si la respuesta es un JSON válido antes de intentar analizarla
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          const result = await response.json();
-          console.log('Response:', result); // Agrega este log para verificar la respuesta del servidor
-          setLiked(true);
-          setDisliked(false);
-          console.log('+1');
-        } else {
-          console.error('La respuesta no es un JSON válido:', response);
-        }
+        setLiked(true);
+        setDisliked(false);
+        toast.success('Like exitoso');
       } else {
-        console.error('Error al actualizar los likes');
+        const errorData = await response.json();
+        toast.error(errorData.message);
       }
     } catch (error) {
-      console.error('Error al realizar la solicitud:', error);
-    } finally {
-      window.location.reload()
+      console.error('Error liking:', error);
+      toast.error('Like error');
     }
-
   };
 
   const handleDislike = async () => {
-
+    const userId = obtainDataUser()._id;
     try {
-      const requestBody = { dislikes: +1 };
-      //const requestID = webPageData.id
-
-      console.log('Request Body:', requestBody);
-
-      const response = await fetch(`http://localhost:3000/api/dislike/${webPageData.id}`, {
+      const response = await fetch(`http://localhost:9000/api/webPage/${webPageData._id}/likes`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify(requestBody),
+        body: JSON.stringify({  userId, action: 'dislike' }),
       });
 
       if (response.ok) {
-        // Verificar si la respuesta es un JSON válido antes de intentar analizarla
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          const result = await response.json();
-          console.log('Response:', result); // Agrega este log para verificar la respuesta del servidor
-          setDisliked(true);
-          setLiked(false);
-          console.log('+1');
-        } else {
-          console.error('La respuesta no es un JSON válido:', response);
-        }
+        setDisliked(true);
+        setLiked(false);
+        toast.success('Dislike exitoso');
       } else {
-        console.error('Error al actualizar los dislikes');
+        const errorData = await response.json();
+        toast.error(errorData.message);
       }
     } catch (error) {
-      console.error('Error al realizar la solicitud:', error);
-    } finally {
-      window.location.reload()
+      console.error('Error disliking:', error);
+      toast.error('Error dislike');
     }
-
   };
 
   const handleReview = async () => {

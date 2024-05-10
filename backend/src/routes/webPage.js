@@ -3,7 +3,7 @@ const router = express.Router();
 const { checkRole } = require('../middleware/role');
 const { authMiddleware } = require('../middleware/session');
 const { existingWebPage } = require('../middleware/webPage')
-const { existingCommerceWebPage, createWebPage,deleteWebPage, updateReview } = require('../controllers/webPage');
+const { existingCommerceWebPage, createWebPage,deleteWebPage, updateReview,updateLikesDislikes } = require('../controllers/webPage');
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 const { uploadImages } = require('../utils/storage');
@@ -155,5 +155,6 @@ router.post('/upload-images',authMiddleware, checkRole(['merchant']), existingWe
  */
 router.delete('/delete/:id', authMiddleware, checkRole(['merchant']), deleteWebPage);
 
+router.put('/:id/likes',authMiddleware, checkRole(['usuario']), updateLikesDislikes);
 
 module.exports = router;
