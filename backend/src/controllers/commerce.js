@@ -2,6 +2,27 @@ const { commercesModel, usersModel } = require('../models');
 const { createMerchantCONTROLLER } = require('./auth');
 const { matchedData } = require('express-validator');
 const { handleError } = require('../utils/handleResponses');
+
+const getMerchantWithCommerceById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        console.log(id)
+        const commerce = await commercesModel.findById(id);
+        if (!commerce) {
+            console.log(`No se encontró el comercio con ID: ${id}`);
+            return res.status(404).json({ message: 'Commerce not found' });
+        }
+
+        console.log(`Comerciante encontrado para el comercio con ID: ${id}`, commerce.merchant);
+        res.status(200).json({ merchantId: commerce.merchant });
+    } catch (error) {
+        console.error('Error al obtener el comerciante del comercio:', error);
+        handleError(res, 'Error interno al obtener el comerciante del comercio', 500);
+    }
+};
+
+
 const createCommerce = async (req, res) => {
     const data = matchedData(req);
     try {
@@ -125,4 +146,4 @@ const deleteCommerceByID = async (req, res) => {
 
 
 
-module.exports = { createCommerce, getAllCommerces, getCommerceByID, deleteAllCommerces, deleteCommerceByID, getCommerceByEmailUser };
+module.exports = { createCommerce, getAllCommerces, getCommerceByID, deleteAllCommerces, deleteCommerceByID, getCommerceByEmailUser, getMerchantWithCommerceById };

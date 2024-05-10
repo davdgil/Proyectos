@@ -3,7 +3,7 @@ const router = express.Router();
 const { checkRole } = require('../middleware/role');
 const { authMiddleware } = require('../middleware/session');
 const { existingWebPage } = require('../middleware/webPage')
-const { existingCommerceWebPage, createWebPage,deleteWebPage } = require('../controllers/webPage');
+const { existingCommerceWebPage, createWebPage,deleteWebPage, updateReview } = require('../controllers/webPage');
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 const { uploadImages } = require('../utils/storage');
@@ -35,8 +35,45 @@ const { uploadImages } = require('../utils/storage');
  *       500:
  *         description: Error interno del servidor
  */
-router.get('/getWebPage/:merchantId', authMiddleware, checkRole(['merchant']), existingCommerceWebPage);
+router.get('/getWebPage/:merchantId', authMiddleware, checkRole(['merchant', 'admin', 'usuario', 'anonimo']), existingCommerceWebPage);
 
+/**
+ * @swagger
+ * /webPage/review/{id}:
+ *   put:
+ *     summary: Actualiza una reseña en una página web
+ *     tags: [WebPage]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: El ID de la página web en la que se actualizará la reseña
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: El ID del usuario que deja la reseña
+ *               comment:
+ *                 type: string
+ *                 description: El comentario de la reseña
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Reseña actualizada correctamente
+ *       400:
+ *         description: El usuario ya ha dejado una reseña para esta página web
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.put('/review/:id', authMiddleware, checkRole(['usuario']), updateReview);
 /**
  * @swagger
  * /webPage/upload-images:

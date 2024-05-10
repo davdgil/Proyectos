@@ -4,7 +4,7 @@ const { commerceValidation } = require('../validators/commerce')
 const { existingUser} = require('../middleware/user');
 const { checkRole } = require('../middleware/role')
 const { authMiddleware } = require('../middleware/session')
-const { createCommerce, getAllCommerces, getCommerceByID, deleteAllCommerces, deleteCommerceByID, getCommerceByEmailUser } = require("../controllers/commerce");
+const { createCommerce, getAllCommerces, getCommerceByID, deleteAllCommerces, deleteCommerceByID, getCommerceByEmailUser, getMerchantWithCommerceById } = require("../controllers/commerce");
 
 
 /**
@@ -109,7 +109,6 @@ router.get('/:id',authMiddleware, checkRole(['admin']), getCommerceByID);
 
 router.delete('/deleteAllCommerces',authMiddleware, checkRole(['admin']), deleteAllCommerces);
 
-
 /**
  * @swagger
  * /commerce/commerceByID/{id}:
@@ -166,6 +165,39 @@ router.delete('/commerceByID/:id',authMiddleware, checkRole(['admin', 'merchant'
  *         description: Error interno del servidor
  */
 router.get('/getCommerceByEmail/:email', authMiddleware, checkRole(['admin', 'merchant']), getCommerceByEmailUser);
+
+/**
+ * @swagger
+ * /commerce/getMerchant/{id}:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Obtener el comerciante asociado a un comercio por ID
+ *     tags: [Commerce]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del comercio para obtener el comerciante asociado
+ *     responses:
+ *       200:
+ *         description: Devuelve el ID del comerciante asociado al comercio.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 merchantId:
+ *                   type: string
+ *                   description: El ID del comerciante asociado al comercio.
+ *       404:
+ *         description: Comercio no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.get('/getMerchant/:id', authMiddleware, checkRole(['admin', 'merchant', 'usuario', 'anonimo']), getMerchantWithCommerceById);
 
 
 module.exports = router;

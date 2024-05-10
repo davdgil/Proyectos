@@ -65,5 +65,29 @@ const deleteWebPage = async (req, res) => {
   }
 };
 
-module.exports = { existingCommerceWebPage, createWebPage, deleteWebPage };
+const updateReview = async (req, res) => {
+  const { id } = req.params;
+  const { userId, comment } = req.body;
+  
+  try {
+      // Verificar si el usuario ya ha dejado una reseña
+      const page = await webPageModel.findById(id);
+      const existingReview = page.reviews.find(review => String(review.userId) === userId);
+      if (existingReview) {
+          return res.status(400).json({ message: "Ya has dejado una reseña para esta página web" });
+      }
+
+    // Agregar la nueva reseña al documento de página web
+    page.reviews.push({ userId, comment });
+    await page.save();
+
+    res.status(200).json({ message: 'Reseña actualizada exitosamente' });
+  } catch (error) {
+    console.error('Error actualizando reseña:', error);
+    handleError(res, "Error interno en el servidor", 500);
+  }
+};
+
+
+module.exports = { existingCommerceWebPage, createWebPage, deleteWebPage, updateReview };
 

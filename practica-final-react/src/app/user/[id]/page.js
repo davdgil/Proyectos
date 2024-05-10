@@ -10,33 +10,73 @@ import toast from "react-hot-toast";
 export default function Page() {
     const params = useParams();
     const [webPage, setWebPage] = useState([]);
-    const router = useRouter(null)
+    const [idCommerce, setIdCommerce] = useState('');
+
 
     useEffect(() => {
-        const fetchWebPage = async () => {
+        const fetchMerchant = async () => {
             try {
-                const res = await fetch(`http://localhost:3000/api/webPage`);
-                const data = await res.json();
-                console.log("pagins web:", data);
-
-                const page = data.webPage.find((u) => u.id === params.id);
-                if (page) {
-                    console.log("pagina", page);
-                    setWebPage(page);
-                }else{
-                    
-                    toast.error("No hay pagina web asociada al comercio")
-                    router.push('/user')
+                const res = await fetch(`http://localhost:9000/api/commerce/getMerchant/${idCommerce}`, {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                if (!res.ok) {
+                    throw new Error('Failed to fetch merchant');
                 }
-
+        
+                const data = await res.json();
+                if (data) {
+                    console.log("Merchant ID:", data.merchantId);
+                    fetchWebPage(data.merchantId)
+                } else {
+                    console.error("No merchant associated with this commerce");
+                    toast.error("No hay comerciante asociado a este comercio");
+                }
+        
             } catch (error) {
-                console.error("Error al obtener la página web:", error);
+                console.error("Error al obtener el comerciante asociado:", error);
+                toast.error("Error al realizar la búsqueda del comerciante");
             }
         };
 
-        fetchWebPage(); 
+        if (idCommerce && localStorage.getItem('token')) {
+            fetchMerchant();
+        }
+    }, [idCommerce]);
 
-    }, [params]); 
+    useEffect(() => {
+        const path = window.location.pathname;
+        setIdCommerce(path.substring(path.lastIndexOf('/') + 1));
+    }, [params]);
+
+ 
+    const fetchWebPage = async (id) => {
+
+        try {
+            const res = await fetch(`http://localhost:9000/api/webPage/getWebPage/${id}`, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            if (!res.ok) {
+                throw new Error('Failed to fetch merchant');
+            }
+    
+            const data = await res.json();
+            if (data) {
+                console.log("Merchant ID:", data);
+                setWebPage(data.page)
+            } else {
+                console.error("No hay pagina web asociada a este comercio");
+                toast.error("No hay pagina web asociada a este comercio");
+            }
+    
+        } catch (error) {
+            console.error("Error al obtener el comerciante asociado:", error);
+            toast.error("Error al realizar la búsqueda del comerciante");
+        }
+    }
 
     return (
         <div>

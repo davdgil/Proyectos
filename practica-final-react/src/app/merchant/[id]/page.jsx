@@ -104,7 +104,7 @@ export default function WebPage() {
   };
 
   const handleSave = async (data) => {
-    console.log('dataaaaaaaaaaaaaaaaaaaaaaaaaaaaa',data)
+
     setEditing(false); 
     setExistPage(true);
 

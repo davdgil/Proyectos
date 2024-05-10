@@ -57,7 +57,7 @@ export default function UserPages() {
     );
 
     const handleClick = (id) => {
-    
+        
         console.log("id", id)
         router.push(`/user/${id}`)
         

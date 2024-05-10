@@ -39,8 +39,7 @@ const WebPageSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
     },
-    comment: String,
-    rating: Number
+    comment: String
   }],
   photos: [{
     url: String,
