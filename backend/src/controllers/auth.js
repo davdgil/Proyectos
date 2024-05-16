@@ -71,7 +71,7 @@ const existingUserGET = async (req, res) => {
                 }
             });
         } else {
-            handleError(res, 'Usuario no encontrado', 404);
+            handleError(res, 'Usuario no encontrado', 500);
         }
     } catch (error) {
         console.error(error);
