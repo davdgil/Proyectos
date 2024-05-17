@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import jwtDecode from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 
 const UpdateUserForm = () => {
   const [user, setUser] = useState({
