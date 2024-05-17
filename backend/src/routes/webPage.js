@@ -180,6 +180,46 @@ router.delete('/delete/:id', authMiddleware, checkRole(['merchant']), deleteWebP
  */
 router.delete('/deleteByCommerceName/:commerceName', authMiddleware, checkRole(['admin']), deleteWebPageByCommerceName)
 
-router.put('/:id/likes',authMiddleware, checkRole(['usuario']), updateLikesDislikes);
+/**
+ * @swagger
+ * /webPage/{id}/likes:
+ *   put:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Actualiza los likes y dislikes de una página web
+ *     tags: [WebPage]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: El ID de la página web
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               action:
+ *                 type: string
+ *                 enum: [like, dislike]
+ *                 description: La acción a realizar (like o dislike)
+ *               userId:
+ *                 type: string
+ *                 description: El ID del usuario que realiza la acción
+ *     responses:
+ *       200:
+ *         description: Acción realizada correctamente (like o dislike)
+ *       400:
+ *         description: Acción inválida o el usuario ya realizó esta acción/opuesta
+ *       404:
+ *         description: Página web no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.put('/:id/likes', authMiddleware, checkRole(['usuario']), updateLikesDislikes);
+
 
 module.exports = router;

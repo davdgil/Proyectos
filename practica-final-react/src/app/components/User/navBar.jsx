@@ -28,6 +28,13 @@ function UserBar() {
                             </Link>
                         </li>
                         <li>
+                            <Link href="/user/perfil" passHref>
+                                <p className="block py-2 px-3 text-red-500 text-2xl rounded hover:bg-gray-100 hover:border-transparent md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+                                    Modificar Perfil
+                                </p>
+                            </Link>
+                        </li>
+                        <li>
 
                         </li>
 

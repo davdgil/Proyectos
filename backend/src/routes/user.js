@@ -65,7 +65,7 @@ const {
  *       500:
  *         description: Internal server error
  */
-  router.get('/getUserById/:id',authMiddleware,checkRole(['admin']), getUserById);
+  router.get('/getUserById/:id',authMiddleware,checkRole(['admin', 'usuario']), getUserById);
   
 /**
  * @swagger
@@ -166,7 +166,8 @@ const {
  *       500:
  *         description: Internal server error
  */
-  router.put('/updateUserById/:id',authMiddleware,checkRole(['admin']), updateUser);
+router.put('/updateUserById/:id', authMiddleware, checkRole(['admin', 'usuario']), updateUser);
+
 
 
 
